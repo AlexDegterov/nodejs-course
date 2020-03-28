@@ -1,0 +1,66 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Encode file",
+            "program": "${workspaceFolder}\\app.js",
+            "args": [
+                "-s",
+                "7",
+                "-a",
+                "encode",
+                "-i",
+                "./files/input.txt",
+                "-o",
+                "./files/output.txt"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Decode file",
+            "program": "${workspaceFolder}\\app.js",
+            "args": [
+                "-s",
+                "7",
+                "-a",
+                "decode",
+                "-i",
+                "./files/input_decode.txt",
+                "-o",
+                "./files/output.txt"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Full params. Encode file",
+            "program": "${workspaceFolder}\\app.js",
+            "args": [
+                "--shift",
+                "7",
+                "--action",
+                "encode",
+                "--input",
+                "./files/input.txt",
+                "--output",
+                "./files/output.txt"
+            ]
+        },
+        ,
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "StdIn + StdOut",
+            "program": "${workspaceFolder}\\app.js",
+            "args": [
+                "--shift",
+                "7",
+                "--action",
+                "encode"
+            ]
+        },
+    ]
+}
