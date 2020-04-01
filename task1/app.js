@@ -34,7 +34,8 @@ if(!programOptions.input) process.stdout.write(`Write text for ${programOptions.
 pipeline(
   readStream,
   transform_stream,
-  writeStream
+  writeStream,
+  console.error
 )
 
 function sendError(err, txt, file) {
