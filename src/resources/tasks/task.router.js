@@ -1,37 +1,39 @@
-const router = require('express').Router();
-const Task = require('./task.model');
+const router = require('express').Router({ mergeParams: true });
 const taskService = require('./task.service');
 
 router
   .route('/')
   .get(async (req, res) => {
-    const id = req.params.boardId;
-    const tasks = await taskService.getByBoardId(id);
-    res.send(tasks);
+    const tasks = await taskService.getAll(req.params.boardId);
+    if (tasks.length) res.json(tasks);
+    else res.status(404).send('Tasks not found. Check ID');
   })
   .post(async (req, res) => {
-    const id = req.params.boardId;
-    const addedTask = await taskService.addTask(req.body, id);
+    const addedTask = await taskService.addTask(req.body, req.params.boardId);
     res.json(addedTask);
   });
 
 router
   .route('/:id')
   .get(async (req, res) => {
-    const taskId = req.params.id;
-    const boardId = req.params.boardId;
-    res.json(await taskService.getByBoardAndTaskId(boardId, taskId));
+    const task = await taskService.getTaskById(
+      req.params.boardId,
+      req.params.id
+    );
+    if (task) res.json(task);
+    else res.status(404).send('Task not found. Check ID');
   })
   .put(async (req, res) => {
-    const taskId = req.params.taskId;
-    const boardId = req.params.boardId;
-    res.json(await taskService.updateTask(boardId, taskId, req.body));
+    const updatedTask = await taskService.updateTask(
+      req.params.boardId,
+      req.params.id,
+      req.body
+    );
+    res.json(updatedTask);
   })
   .delete(async (req, res) => {
-    const taskId = req.params.taskId;
-    const boardId = req.params.boardId;
-    await taskService.deleteTask(boardId, taskId);
-    res.send(`Task ${taskId} was deleted`);
+    await taskService.deleteTaskById(req.params.boardId, req.params.id);
+    res.send(`Task ${req.params.id} was deleted`);
   });
 
 module.exports = router;

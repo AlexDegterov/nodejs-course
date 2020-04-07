@@ -1,15 +1,16 @@
 const boardsRepo = require('./board.memory.repository');
-let boards = require('./boards.db');
+const boards = require('./boards.db');
+const tasksService = require('../tasks/task.service');
 
 const getAllBoards = () => {
   return boards;
 };
 
 const getBoardById = id => {
-  const board = boards.find(board => {
+  const boardInfo = boards.find(board => {
     return board.id === id;
   });
-  return board;
+  return boardInfo;
 };
 
 const addBoard = board => {
@@ -17,24 +18,12 @@ const addBoard = board => {
   return board;
 };
 
-const updateBoard = (id, boardData) => {
-  boards = boards.map(board => {
-    if (board.id === id) {
-      return { ...board, ...boardData };
-    }
-    return board;
-  });
-  return { id, ...boardData };
-};
+const updateBoard = (id, data) => boardsRepo.updateBoardById(id, data);
 
 const deleteBoard = async id => {
-  const boardToDelete = boards.find(board => {
-    return board.id === id;
-  });
-  boards = boards.filter(board => {
-    return board.id !== id;
-  });
-  return boardToDelete;
+  const deletedBoard = boardsRepo.deleteBoard(id);
+  tasksService.deleteTaskByBoard(id);
+  return deletedBoard;
 };
 
 module.exports = {

@@ -1,52 +1,39 @@
 const tasksRepo = require('./task.memory.repository');
-const getAll = () => tasksRepo.getAll();
-const Task = require('./task.model');
 
-let tasks = require('./task.bd');
+const getAll = boardId => tasksRepo.getAll(boardId);
 
-const getByBoardId = async id => {
-  return tasks.filter(({ boardId }) => boardId === id).map(Task.toResponse);
+const getTaskById = async (boardId, taskId) => {
+  const tasks = await tasksRepo.getTaskById(boardId, taskId);
+  return tasks;
 };
 
-const getByBoardAndTaskId = async (boardId, taskId) => {
-  return (
-    tasks
-      // .find(task => task.id === taskId && task.boardId === boardId)
-      .find(task => {
-        return task.id === taskId;
-      })
-      .map(Task.toResponse)
-  );
-};
-
-const addTask = async taskData => {
-  const task = new Task(taskData);
-  tasks.push(task);
-  return Task.toResponse(task);
+const addTask = async (data, boardId) => {
+  const task = await tasksRepo.addTask(boardId, data);
+  return task;
 };
 
 const updateTask = async (boardId, taskId, updatedData) => {
-  let updatedTask;
-  tasks = tasks.map(task => {
-    if (task.id === taskId && task.boardId === boardId) {
-      updatedTask = { ...task, ...updatedData };
-      return updatedTask;
-    }
-    return Task.toResponse(updatedTask);
-  });
+  return await tasksRepo.updateTask(boardId, taskId, updatedData);
 };
 
-const deleteTask = async (boardId, taskId) => {
-  tasks = tasks.filter(
-    task => !(task.id === taskId && task.boardId === boardId)
-  );
+const deleteTaskById = async (boardId, taskId) => {
+  const deletedTask = await tasksRepo.deleteTask(boardId, taskId);
+  return deletedTask;
 };
+
+const deleteTaskByBoard = async (boardId, taskId) => {
+  const deletedTask = await tasksRepo.deleteAllTaskBoardId(boardId, taskId);
+  return deletedTask;
+};
+
+const unassignTask = idUser => tasksRepo.unassignTask(idUser);
 
 module.exports = {
   getAll,
-  getByBoardId,
-  getByBoardAndTaskId,
+  getTaskById,
   addTask,
   updateTask,
-  deleteTask
+  deleteTaskByBoard,
+  deleteTaskById,
+  unassignTask
 };

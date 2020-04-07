@@ -28,7 +28,7 @@ const updateUser = async (id, userData) => {
 
 const deleteUser = async id => {
   const userToDelete = users.find(usr => {
-    return usr.id == id;
+    return usr.id === id;
   });
   users = users.filter(user => {
     return user.id !== id;

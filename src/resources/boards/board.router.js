@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const Board = require('./board.model');
 const boardsService = require('./board.service');
+const taskRouter = require('../tasks/task.router');
 
 router
   .route('/')
@@ -9,24 +10,29 @@ router
     res.json(boards);
   })
   .post(async (req, res) => {
-    res.json(await boardsService.addBoard(new Board(req.body)));
+    const addedBoard = await boardsService.addBoard(new Board(req.body));
+    res.json(addedBoard);
   });
 
 router
   .route('/:id')
   .get(async (req, res) => {
-    const id = req.params.id;
-    res.json(await boardsService.getBoardById(id));
+    const board = await boardsService.getBoardById(req.params.id);
+    if (board) res.json(board);
+    else res.status(404).send('Board not found. Check ID');
   })
   .put(async (req, res) => {
-    const { boardId } = req.params;
-    const newBoardData = req.body;
-    const updatedBoard = await boardsService.updateBoard(boardId, newBoardData);
+    const updatedBoard = await boardsService.updateBoard(
+      req.params.id,
+      req.body
+    );
     res.json(updatedBoard);
   })
   .delete(async (req, res) => {
-    const id = req.params.id;
-    res.json(await boardsService.deleteBoard(id));
+    const deletedBoards = await boardsService.deleteBoard(req.params.id);
+    res.json(deletedBoards);
   });
+
+router.use('/:boardId/tasks', taskRouter);
 
 module.exports = router;

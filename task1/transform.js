@@ -1,4 +1,3 @@
-'use strict';
 const stream = require('stream');
 const caesarCipher = require('./caesarCipher');
 

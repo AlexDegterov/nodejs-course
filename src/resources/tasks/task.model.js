@@ -5,10 +5,10 @@ class Task {
     id = uuid(),
     title = 'Task title',
     order = 0,
-    description = 'description',
-    userId = 'userId',
-    boardId = 'boardId',
-    columnId = 'columnId'
+    description = 'Task description',
+    userId = null,
+    boardId = null,
+    columnId = null
   } = {}) {
     this.id = id;
     this.title = title;
@@ -17,11 +17,6 @@ class Task {
     this.userId = userId;
     this.boardId = boardId;
     this.columnId = columnId;
-  }
-
-  static toResponse(task) {
-    const { id, title, order, description, userId } = task;
-    return { id, title, order, description, userId };
   }
 }
 
