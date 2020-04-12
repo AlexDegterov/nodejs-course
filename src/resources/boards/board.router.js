@@ -2,6 +2,7 @@ const router = require('express').Router();
 const Board = require('./board.model');
 const boardsService = require('./board.service');
 const taskRouter = require('../tasks/task.router');
+const { ErrorHandler } = require('../../helpers/error');
 
 router
   .route('/')
@@ -16,10 +17,14 @@ router
 
 router
   .route('/:id')
-  .get(async (req, res) => {
-    const board = await boardsService.getBoardById(req.params.id);
-    if (board) res.json(board);
-    else res.status(404).send('Board not found. Check ID');
+  .get(async (req, res, next) => {
+    try {
+      const board = await boardsService.getBoardById(req.params.id);
+      if (board) res.json(board);
+      else throw new ErrorHandler(404, 'Board not found. Check ID');
+    } catch (error) {
+      next(error);
+    }
   })
   .put(async (req, res) => {
     const updatedBoard = await boardsService.updateBoard(
