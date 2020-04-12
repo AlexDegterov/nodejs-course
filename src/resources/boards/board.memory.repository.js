@@ -1,39 +1,40 @@
 const Board = require('./board.model');
 const boards = require('./boards.db');
+const { catchError } = require('../../helpers/error');
 
-const getAll = async () => {
+const getAll = catchError(async () => {
   return boards;
-};
+});
 
-const getBoardById = id => {
+const getBoardById = catchError(id => {
   boards.find(board => {
     return board.id === id;
   });
-};
+});
 
-const addBoard = boardData => {
+const addBoard = catchError(boardData => {
   const addedBoard = new Board(boardData);
   boards.push(addedBoard);
   return addedBoard;
-};
+});
 
-const updateBoardById = (id, newData) => {
+const updateBoardById = catchError((id, newData) => {
   let index;
   boards.map((board, i) => {
     if (board.id === id) index = i;
   });
   boards[index] = { ...boards[index], ...newData };
   return boards[index];
-};
+});
 
-const deleteBoard = id => {
+const deleteBoard = catchError(id => {
   let index;
   boards.map((board, i) => {
     if (board.id === id) index = i;
   });
   const deleteBoardInfo = boards.splice(index, 1);
   return deleteBoardInfo;
-};
+});
 
 module.exports = {
   getAll,

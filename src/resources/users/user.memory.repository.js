@@ -1,22 +1,23 @@
 let users = require('./user.db.js');
+const { catchError } = require('../../helpers/error');
 
-const getAll = async () => {
+const getAll = catchError(async () => {
   return users;
-};
+});
 
-const getUserById = async id => {
+const getUserById = catchError(async id => {
   const userInfo = users.find(user => {
     return user.id === id;
   });
   return userInfo;
-};
+});
 
-const addUser = async user => {
+const addUser = catchError(async user => {
   users.push(user);
   return user;
-};
+});
 
-const updateUser = async (id, userData) => {
+const updateUser = catchError(async (id, userData) => {
   users = users.map(user => {
     if (user.id === id) {
       return { id, ...userData };
@@ -24,9 +25,9 @@ const updateUser = async (id, userData) => {
     return user;
   });
   return { id, ...userData };
-};
+});
 
-const deleteUser = async id => {
+const deleteUser = catchError(async id => {
   const userToDelete = users.find(usr => {
     return usr.id === id;
   });
@@ -34,6 +35,6 @@ const deleteUser = async id => {
     return user.id !== id;
   });
   return userToDelete;
-};
+});
 
 module.exports = { getAll, getUserById, addUser, updateUser, deleteUser };
