@@ -35,9 +35,6 @@ process.on('uncaughtException', error => {
   logger.error('Uncaught error ', error);
 });
 
-// throw Error('Oops!');
-// Promise.reject(Error('Oops!'))
-
 app.use((err, req, res, next) => {
   if (err.statusCode) {
     handleError(err, res);
