@@ -4,23 +4,22 @@ const path = require('path');
 const User = require('../src/resources/users/user.model');
 const Board = require('../src/resources/boards/board.model');
 const Task = require('../src/resources/tasks/task.model');
+const bcrypt = require('bcrypt');
+const salt = 10;
 
 dotenv.config({
   path: path.join(__dirname, '../.env')
 });
 
+// eslint-disable-next-line no-sync
+const passwordAdminHash = bcrypt.hashSync('admin', salt);
+
 const users = [
   new User({
     name: 'Alex',
-    login: 'AlexLogin',
-    password: 'pswAlex',
+    login: 'admin',
+    password: passwordAdminHash,
     id: 'u1-uuu'
-  }),
-  new User({
-    name: 'Ustas',
-    login: 'UstasLogin',
-    password: 'pswUstas',
-    id: 'u2-uuu'
   })
 ];
 

@@ -4,8 +4,10 @@ const path = require('path');
 const YAML = require('yamljs');
 const userRouter = require('./resources/users/user.router');
 const boardRouter = require('./resources/boards/board.router');
+const loginRouter = require('./resources/login/login.router');
 const { appLogger, logger } = require('./helpers/logger');
 const { internalServerError, handleError } = require('./helpers/error');
+const { checkToken } = require('./helpers/auth');
 
 const app = express();
 const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
@@ -24,8 +26,9 @@ app.use('/', (req, res, next) => {
   next();
 });
 
-app.use('/users', userRouter);
-app.use('/boards', boardRouter);
+app.use('/login', loginRouter);
+app.use('/users', checkToken, userRouter);
+app.use('/boards', checkToken, boardRouter);
 
 process.on('unhandledRejection', (reason, promise) => {
   logger.error('Unhandled rejection ', reason, promise);
@@ -45,6 +48,7 @@ app.use((err, req, res, next) => {
 
 app.use((err, req, res, next) => {
   internalServerError(req, res);
+  next(err);
 });
 
 module.exports = app;

@@ -1,5 +1,7 @@
 const { catchError } = require('../../helpers/error');
 const User = require('./user.model');
+const bcrypt = require('bcrypt');
+const salt = 10;
 
 const getAll = catchError(async () => {
   const users = await User.find({}).exec();
@@ -12,6 +14,8 @@ const getUserById = catchError(async id => {
 });
 
 const addUser = catchError(async user => {
+  // eslint-disable-next-line require-atomic-updates
+  user.password = await bcrypt.hash(user.password, salt);
   return User.create(user);
 });
 
